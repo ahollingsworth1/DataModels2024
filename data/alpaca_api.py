@@ -1,4 +1,3 @@
-
 """ 
 
 link: https://app.alpaca.markets/account/login
@@ -32,6 +31,7 @@ base_url = 'https://paper-api.alpaca.markets'
 # Initialize the Alpaca API
 api = tradeapi.REST(api_key, api_secret, base_url, api_version='v2')
 
+# fetch historical data
 symbol = 'AAPL' 
 start_date = datetime(2000, 1, 1).astimezone(pytz.timezone('UTC')) 
 end_date = datetime(2022, 1, 31).astimezone(pytz.timezone('UTC'))  
@@ -58,12 +58,14 @@ plt.plot(Y.index, fitted_model.fittedvalues, label='Smoothed Volume', color='red
 plt.legend()
 plt.show()
 
+# train- test split
 X_train, X_test, y_train, y_test = train_test_split(X, Y, test_size=0.2, random_state=40)
 
 # i initially had this a decision tree but the metrics were bad so switched it to forest which improved it some
 regressor = xgb.XGBRegressor(n_estimators=100, random_state=40)
 regressor.fit(X_train, y_train)
 
+# XGBoost regressor
 predictions = regressor.predict(X_test)
 mse = mean_squared_error(y_test, predictions)
 r2 = r2_score(y_test, predictions)
